@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>reveal.js</title>
+
+	<link rel="stylesheet" href="dist/reset.css">
+	<link rel="stylesheet" href="dist/reveal.css">
+	<link rel="stylesheet" href="dist/theme/black.css">
+
+	<!-- Theme used for syntax highlighted code -->
+	<link rel="stylesheet" href="plugin/highlight/monokai.css">
+</head>
+<body>
+<div class="reveal">
+	<div class="slides">
+
+
+		<!-- Slides are separated by regexp matching newline + three dashes + newline, vertical slides identical but two dashes -->
+		<section data-markdown data-separator="^\n---\n$" data-separator-vertical="^\n--\n$" r-fit-text>
+			<script type="text/template">
+				## Apache Tomcat
+				* Free and Open Source
+				* [Apache License v2](https://www.apache.org/licenses/LICENSE-2.0)
+				Note:
+				* Tomcat wurde von James Duncan Davidson nach dem Tier benannt, weil es kraftvoll und schwer zu zähmen ist. Die Idee dahinter war, dass Tomcat eine robuste und flexible Lösung ist.
+				* Die Apache Software Foundation wurde von den Entwicklern des Apache Webservers gegründet als Organisation, um Open Source Software Projekte zu fördern. Heute gibt es viele 100 Projekte, die von der ASF gefördert werden.
+				* Die Apache v2 Lizenz erlaubt die Nutzung, Modifikation und Weitergabe, auch unter anderen Lizenten und ohne das der Code offengelegt werden muss
+
+				--
+
+				## Tomcat Begriffe
+
+
+				| Catalina | Die Servlet-Engine von Tomcat |
+				|--|--|
+				| Coyote | Der HTTP-Connector von Tomcat |
+				| Jasper | Die JSP-Engine von Tomcat |
+
+				Note:
+				* Catalina ist das Herzstück von Tomcat und führt die Servlets aus. Wenn eine Anfrage an Tomcat gesendet wird, verarbeitet Catalina diese und gibt die entsprechende Antwort zurück. Es fungiert als der "Motor" von Tomcat, indem es alle eingehenden HTTP-Anfragen bearbeitet und auf Grundlage der Servlet-Spezifikation arbeitet. In der Konfigurationsdatei *server.xml* ist Catalina der Hauptcontainer.
+				* Die gängigsten Connectoren sind der HTTP-Connector und der AJP-Connector. Coyote ist der Standard-HTTP-Connector von Tomcat und ist für die Verarbeitung von HTTP-Anfragen zuständig. Es unterstützt sowohl HTTP 1.1 als auch WebSockets und ermöglicht es Tomcat, sowohl als herkömmlicher Webserver als auch als Container für dynamische Webanwendungen zu dienen. Coyote wird ebenfalls in der *server.xml* konfiguriert und ist sehr leistungsfähig bei der Verarbeitung von hohen Datenverkehrsmengen.
+				* Jasper ist die JSP-Engine von Tomcat und dient dazu, JSP-Seiten in Java-Servlets zu übersetzen. JSPs ermöglichen das Schreiben von dynamischen Webseiten mit Java, und Jasper kümmert sich darum, diese zur Laufzeit in ausführbare Servlets umzuwandeln. Sobald eine JSP in ein Servlet übersetzt wurde, wird sie von Catalina ausgeführt. Jasper sorgt dafür, dass Änderungen an JSP-Dateien automatisch erkannt und neu kompiliert werden.
+
+				--
+
+				## Versionen
+				- Aktuell 11, 10, 9
+				- Neue Tomcat-Versionen passen sich den neuesten **Java EE/Jakarta EE** Standards an.
+				- Ältere Versionen von Tomcat sind nicht mit den neuesten Java-Versionen kompatibel.
+				- Der Wechsel von javax.* zu jakarta.* in Tomcat 10.x kann Migrationsaufwand erfordern.
+
+				Note:
+				Apache Tomcat hat sich über die Jahre weiterentwickelt, um die neuesten Java- und Jakarta EE-Standards zu unterstützen. Tomcat 10.x ist besonders erwähnenswert, da es den Wechsel von der *javax.*-Namenskonvention zur *jakarta.*-Namenskonvention markiert, was eine bedeutende Änderung in der Entwicklung von Java-EE-basierten Anwendungen darstellt. Ältere Versionen wie Tomcat 9.x und 8.x sind noch weit verbreitet, insbesondere bei Anwendungen, die auf Java EE 8 oder älteren Standards basieren.
+
+				Jede Version von Apache Tomcat hat bestimmte Abhängigkeiten hinsichtlich der Java-Version. Tomcat 10.x benötigt mindestens Java 11, was ein Indikator für die Modernisierung von Anwendungen ist. Ältere Tomcat-Versionen wie 7.x und 8.x können auf älteren Java-Versionen laufen, was bei der Verwaltung älterer Anwendungen wichtig ist. Die Wahl der richtigen Java-Version ist entscheidend für die Stabilität und Sicherheit der Anwendung.
+
+				Besonders der Wechsel von javax.* zu jakarta.* in Tomcat 10.x bringt für Entwickler zusätzlichen Aufwand mit sich, da der gesamte Code und die Konfigurationen auf die neue Namenskonvention umgestellt werden müssen. Bei der Planung von Migrationsprojekten sollte dieser Aspekt besonders berücksichtigt werden, um potenzielle Schwierigkeiten zu vermeiden.
+
+				--
+
+				## Übersicht Versionen
+
+				| Tomcat | Java         | Beschreibung |
+				|--------|--------------|--------------|
+				| 11.x   | 17           | Jakarta EE 10, Unterstützung für moderne Java-Versionen |
+				| 10.x ++| 11           | Jakarta EE 9, Wechsel von javax.* zu jakarta.* |
+				| 9.x    | 8 & 11       | Servlet 4.0, JSP 2.3 (Java EE 8-konform) |
+				| 8.x    | 7 & 8        | Servlet 3.1, JSP 2.3 (Java EE 7-konform) |
+				| 7.x    | 6 & 7        | Servlet 3.0, JSP 2.2 (Java EE 6-konform) |
+
+			</script>
+		</section>
+		<section>
+			<section data-markdown data-separator="^\n---\n$" data-separator-vertical="^\n--\n$">
+				<script type="text/template">
+					## Versionen und Java
+					- **Tomcat 10.x**: **Java 11** oder höher. Jakarta EE 9, wesentliche Änderung ist der Wechsel von javax.* zu jakarta.*
+					- **Tomcat 9.x**: **Java 8** und **Java 11**. Servlet 4.0 und JavaServer Pages 2.3 (Java EE 8-konform).
+					- **Tomcat 8.x**: **Java 7** und **Java 8**. Servlet 3.1, JavaServer Pages 2.3 (Java EE 7-konform).
+					- **Tomcat 7.x**: **Java 6** oder **Java 7**. Servlet 3.0 und JavaServer Pages 2.2 (Java EE 6-konform).
+
+					## Wichtig:
+					- Neue Tomcat-Versionen passen sich den neuesten **Java EE/Jakarta EE** Standards an.
+					- Ältere Versionen von Tomcat sind nicht mit den neuesten Java-Versionen kompatibel.
+					- Der Wechsel von javax.* zu jakarta.* in Tomcat 10.x kann Migrationsaufwand erfordern.
+
+					Note:
+					Apache Tomcat hat sich über die Jahre weiterentwickelt, um die neuesten Java- und Jakarta EE-Standards zu unterstützen. Tomcat 10.x ist besonders erwähnenswert, da es den Wechsel von der *javax.*-Namenskonvention zur *jakarta.*-Namenskonvention markiert, was eine bedeutende Änderung in der Entwicklung von Java-EE-basierten Anwendungen darstellt. Ältere Versionen wie Tomcat 9.x und 8.x sind noch weit verbreitet, insbesondere bei Anwendungen, die auf Java EE 8 oder älteren Standards basieren.
+
+					Jede Version von Apache Tomcat hat bestimmte Abhängigkeiten hinsichtlich der Java-Version. Tomcat 10.x benötigt mindestens Java 11, was ein Indikator für die Modernisierung von Anwendungen ist. Ältere Tomcat-Versionen wie 7.x und 8.x können auf älteren Java-Versionen laufen, was bei der Verwaltung älterer Anwendungen wichtig ist. Die Wahl der richtigen Java-Version ist entscheidend für die Stabilität und Sicherheit der Anwendung.
+
+					Besonders der Wechsel von javax.* zu jakarta.* in Tomcat 10.x bringt für Entwickler zusätzlichen Aufwand mit sich, da der gesamte Code und die Konfigurationen auf die neue Namenskonvention umgestellt werden müssen. Bei der Planung von Migrationsprojekten sollte dieser Aspekt besonders berücksichtigt werden, um potenzielle Schwierigkeiten zu vermeiden.
+				</script>
+			</section>
+		</section>
+		<section data-markdown data-separator="^\n---\n$" data-separator-vertical="^\n--\n$">
+			<script type="text/template">
+				# Installation
+
+				--
+
+				# Instantiierung
+
+			</script>
+		</section>
+		<section data-markdown data-separator="^\n---\n$" data-separator-vertical="^\n--\n$">
+			<script type="text/template">
+				# Konfiguration
+
+				--
+
+				# Connectoren
+
+				--
+
+				# Benutzerverwaltung
+				* Realms
+				* Rollen
+				* Benutzer
+
+				--
+
+				# Sessions
+
+				---
+			</script>
+		</section>
+		<section data-markdown data-separator="^\n---\n$" data-separator-vertical="^\n--\n$">
+			<script type="text/template">
+				# Deployment
+
+				--
+
+				# Aufbau Deployment
+
+				--
+
+				# Manager-App
+
+				--
+
+				# Alternativen
+				* Maven
+				* FTP
+
+			</script>
+		</section>
+		<section data-markdown data-separator="^\n---\n$" data-separator-vertical="^\n--\n$">
+			<script type="text/template">
+				# Anbindung Apache Webserver/IIS
+
+			</script>
+		</section>
+		<section data-markdown data-separator="^\n---\n$" data-separator-vertical="^\n--\n$">
+			<script type="text/template">
+				# Troubleshooting
+
+				--
+
+				# Logfiles
+
+				--
+
+				# Logfile-Analyse
+
+				--
+
+				# jstat
+
+				--
+
+				# jconsole
+
+				--
+
+				# Grafana
+
+				--
+
+				# JMX
+
+
+			</script>
+		</section>
+
+	</div>
+</div>
+
+<script src="dist/reveal.js"></script>
+<script src="plugin/notes/notes.js"></script>
+<script src="plugin/markdown/markdown.js"></script>
+<script src="plugin/highlight/highlight.js"></script>
+<script>
+	// More info about initialization & config:
+	// - https://revealjs.com/initialization/
+	// - https://revealjs.com/config/
+	Reveal.initialize({
+		hash: true,
+
+		// Learn about plugins: https://revealjs.com/plugins/
+		plugins: [RevealMarkdown, RevealHighlight, RevealNotes],
+
+		display: 'block',
+		minScale: 0.8,
+		maxScale: 0.8,
+		width: 1200,
+		height: 900,
+	});
+</script>
+</body>
+</html>
