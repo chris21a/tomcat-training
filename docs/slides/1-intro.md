@@ -278,4 +278,4 @@ Besonders der Wechsel von javax.* zu jakarta.* in Tomcat 10.x bringt für Entwic
   - Project Loom: Virtuelle Threads - Erhöhung des Durchsatz
   - HTTP/3 und QUIC (UDP, erhöhte Sicherheit und Geschwindigkeit, auch in Mobil- und WLAN-Netzen)
   - Verbesserung Garbage Collection (GC)
-
+- Neue Ansätze wie Microservices, Embedded Webserver und Container verändern die Art und Weise wie Tomcat genutzt wird.
