@@ -1,4 +1,5 @@
 # Apache Tomcat
+
 * Free and Open Source
 * [Apache License v2](https://www.apache.org/licenses/LICENSE-2.0)
 Note:
@@ -132,9 +133,12 @@ Note:
 > Tomcat ist leichgewichtiger und einfacher Einsetzbar, sowohl in Produktion als auch Entwicklung.
 > Aufgrund der Komplexität von Jakarta EE und des Venor-Lockin verwenden viele Entwickler alternative Frameworks wie Spring Boot oder Quarkus und setzen diese zusammen mit Tomcat ein. 
 
+
 --
 
+
 ## Versionen
+
 | Tomcat | Erscheinungsjahr | Java   | EE                                  |
 |--------|------------------|--------|-------------------------------------|
 | 11     | 2024             | 17     | Jarkarta EE; Servlet 6 & Pages 4.0  |
@@ -142,7 +146,9 @@ Note:
 | 9      | 2017             | 8 & 11 | Java EE 8: Servlet 4 / JSP 2.3      |
 | 8      | 2014             | 7 & 8  | Java EE 7: Servlet 3.1 / JSP 2.3    |
 | 7      | 2010             | 6 & 7  | Java EE 6: Servlet 3.0 / JSP 2.2    |
-<br>
+
+<br/>
+
 - Neue Tomcat-Versionen passen sich den neuesten **Java EE/Jakarta EE** Standards an.
 - Ältere Versionen von Tomcat sind nicht mit den neuesten Java-Versionen kompatibel.
 - Der Wechsel von javax.* zu jakarta.* in Tomcat 10.x kann Migrationsaufwand erfordern.
@@ -156,25 +162,5 @@ Jede Version von Apache Tomcat hat bestimmte Abhängigkeiten hinsichtlich der Ja
 Besonders der Wechsel von javax.* zu jakarta.* in Tomcat 10.x bringt für Entwickler zusätzlichen Aufwand mit sich, da der gesamte Code und die Konfigurationen auf die neue Namenskonvention umgestellt werden müssen. Bei der Planung von Migrationsprojekten sollte dieser Aspekt besonders berücksichtigt werden, um potenzielle Schwierigkeiten zu vermeiden.
 
 
-</script>
-</section>
-<section>
-<section data-markdown data-separator="^\n---\n$" data-separator-vertical="^\n--\n$">
-<script type="text/template">
-    ## Versionen und Java
-    - **Tomcat 10.x**: **Java 11** oder höher. Jakarta EE 9, wesentliche Änderung ist der Wechsel von javax.* zu jakarta.*
-    - **Tomcat 9.x**: **Java 8** und **Java 11**. Servlet 4.0 und JavaServer Pages 2.3 (Java EE 8-konform).
-    - **Tomcat 8.x**: **Java 7** und **Java 8**. Servlet 3.1, JavaServer Pages 2.3 (Java EE 7-konform).
-    - **Tomcat 7.x**: **Java 6** oder **Java 7**. Servlet 3.0 und JavaServer Pages 2.2 (Java EE 6-konform).
+--
 
-    ## Wichtig:
-    - Neue Tomcat-Versionen passen sich den neuesten **Java EE/Jakarta EE** Standards an.
-    - Ältere Versionen von Tomcat sind nicht mit den neuesten Java-Versionen kompatibel.
-    - Der Wechsel von javax.* zu jakarta.* in Tomcat 10.x kann Migrationsaufwand erfordern.
-
-    Note:
-    Apache Tomcat hat sich über die Jahre weiterentwickelt, um die neuesten Java- und Jakarta EE-Standards zu unterstützen. Tomcat 10.x ist besonders erwähnenswert, da es den Wechsel von der *javax.*-Namenskonvention zur *jakarta.*-Namenskonvention markiert, was eine bedeutende Änderung in der Entwicklung von Java-EE-basierten Anwendungen darstellt. Ältere Versionen wie Tomcat 9.x und 8.x sind noch weit verbreitet, insbesondere bei Anwendungen, die auf Java EE 8 oder älteren Standards basieren.
-
-    Jede Version von Apache Tomcat hat bestimmte Abhängigkeiten hinsichtlich der Java-Version. Tomcat 10.x benötigt mindestens Java 11, was ein Indikator für die Modernisierung von Anwendungen ist. Ältere Tomcat-Versionen wie 7.x und 8.x können auf älteren Java-Versionen laufen, was bei der Verwaltung älterer Anwendungen wichtig ist. Die Wahl der richtigen Java-Version ist entscheidend für die Stabilität und Sicherheit der Anwendung.
-
-    Besonders der Wechsel von javax.* zu jakarta.* in Tomcat 10.x bringt für Entwickler zusätzlichen Aufwand mit sich, da der gesamte Code und die Konfigurationen auf die neue Namenskonvention umgestellt werden müssen. Bei der Planung von Migrationsprojekten sollte dieser Aspekt besonders berücksichtigt werden, um potenzielle Schwierigkeiten zu vermeiden.
