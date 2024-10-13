@@ -2,7 +2,7 @@
 
 --
 
-# Intallationsschritte
+## Intallationsschritte
 - JDK installieren und <span style="color:mediumpurple">JAVA_HOME</style> setzen
 - Binärdistribution (https://tomcat.apache.org/download-90.cgi#9.0.96) herunterladen und auspacken, z.B. in ein Verzeichnis <span style="color:mediumpurple"> apache-tomcat-9.0.9</span> <br>
 - Die Umgebungsvariable <span style="color:mediumpurple">CATALINA_HOME</span> auf dieses Verzeichnis setzen (erforderlich). Sie zeigt auf den Start-Ordner der Binärdistribution. 
@@ -11,7 +11,7 @@
 
 --
 
-# Verzeichnis Struktur
+## Verzeichnis Struktur
 
 ```plaintext
 ${CATALINA_HOME}
@@ -50,7 +50,7 @@ ${CATALINA_HOME}
 
 --
 
-# JDK vs JRE
+## JDK vs JRE
 - Tomcat benötigt <span style="color:mediumpurple">JAVA_HOME</span> für das JDK oder <span style="color:mediumpurple">JRE_HOME</span> für das JRE.
 - Ein JDK enthält auch Entwicklungs-Tools, die nicht im JRE enthalten sind.
 - JDK ist erforderlich für Entwicklung und wenn JSP benutzt werden
@@ -58,7 +58,7 @@ ${CATALINA_HOME}
 
 --
 
-# Umgebungs-Variablen
+## Umgebungs-Variablen
 
 Das Skript <span style="color: mediumpurple">`bin/setenv`</span> definiert Umgebungsvariablen(außer CATALINA_HOME und CATLINA_BASE):
 
@@ -74,7 +74,7 @@ Das Skript <span style="color: mediumpurple">`bin/setenv`</span> definiert Umgeb
 
 --
 
-# Tomcat Starten
+## Tomcat Starten
 
 Unix:
    
@@ -105,7 +105,7 @@ Nach dem Start ist Tomcat unter http://localhost:8080 erreichbar.
 
 --
 
-# Tomcat Stoppen
+## Tomcat Stoppen
 
 Unix:
 
@@ -127,7 +127,7 @@ Windows:
 
 --
 
-# Catalina Kommandos
+## Catalina Kommandos
 Das Skript `catalina.sh` (oder `catalina.bat`) unterstützt folgende Kommandos:
 <br>
 
@@ -142,7 +142,7 @@ Das Skript `catalina.sh` (oder `catalina.bat`) unterstützt folgende Kommandos:
 
 --
 
-# Windows-Service
+## Windows-Service
 Windows-Installer (.exe) installiert Tomcat als Windows-Service.<br>
 Eigenschaften des Windows-Services über System-Tray.
 <div class="r-stack" >
@@ -289,6 +289,7 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 ```
+
 1. Description: Beschreibung des Services
 2. After: Startet nach dem Netzwerk
 3. Type: Forking-Modus. Bedeutet, dass der Service im Hintergrund läuft.
@@ -299,7 +300,7 @@ WantedBy=multi-user.target
    - 7 für alle anderen: entzogen werden Lesen (4), Schreiben (2) und Ausführen (1))
 9. RestartSec und Restart: Immer Neustartetn nach Absturz und Wartezeit
 10. WantedBy: Nicht-grafische Benutzersitzungen werden akzeptiert.
-```
+
 
 --
 

@@ -4,7 +4,7 @@
 
 --
 
-# Tools
+## Tools
 
 Die Trainings-Umgebung ist vorinstalliert mit folgenden Tools:<br>
 
@@ -22,7 +22,7 @@ VirtualBox mit einem Ubuntu 24 Gast-System:<br>
 
 --
 
-# Ports
+## Ports
 
 | Windows - IIS Webserver    | http://localhost:80   |
 |----------------------------|-----------------------|
