@@ -2,8 +2,6 @@
 <br>
 <br>
 
-https://dd4t.dadesktop.com/
-
 --
 
 # Tools
@@ -26,11 +24,13 @@ VirtualBox mit einem Ubuntu 24 Gast-System:<br>
 
 # Ports
 
-| Windows - IIS Webserver | http://localhost:80 |
-| -- | -- |
-| Windows - Tomcat | http://localhost:8080 |
-| Ubuntu - Apache Webserver | http://localhost:8000 |
-| Ubuntu - Tomcat | http://localhost:8888 |
+| Windows - IIS Webserver    | http://localhost:80   |
+|----------------------------|-----------------------|
+| Windows - Tomcat           | http://localhost:8080 |
+| Ubuntu - Apache Webserver  | http://localhost:8000 |
+| Ubuntu - Tomcat            | http://localhost:8888 |
+| SSH                        | localhost:2222        |
+
 
 --
 
@@ -47,6 +47,7 @@ VirtualBox mit einem Ubuntu 24 Gast-System:<br>
 
 ## Windows Desktop
 Installation Skript:
+* Windows 10 (10 GB, 8 CPU, 50GB HDD)
 * OpenJDK 11
 * VisualStudio Code als Editor
 * Internet Information Server (IIS) (Control Panel > Programs > Turn Windows Features On or Off)

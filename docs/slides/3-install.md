@@ -167,45 +167,154 @@ Eigenschaften des Windows-Services über System-Tray.
 
 # Linux Installation
 
-  sudo useradd -r -m -U -d /opt/tomcat -s /bin/false tomcat
+--
+
+## User erstellen
+Tomcat sollte nicht als root laufen. Ein eigener Benutzer ist empfohlen.
+
+```bash
+
+sudo useradd -r -m -U -d /opt/tomcat -s /bin/false tomcat
+
+
+```
+> 1. sudo: Führt den Befehl mit Superuser-Rechten aus.
+> 2. useradd: Erstellt einen neuen Benutzer.
+> 3. -r: Erstellt einen Systembenutzer, der für Dienste gedacht ist. UID kleiner 1000. 
+> 4. -m: Erstellt ein Home-Verzeichnis für den Benutzer. 
+> 5. -U: Erstellt eine Gruppe mit dem gleichen Namen wie der Benutzer. 
+> 6. -d /opt/tomcat: Setzt das Home-Verzeichnis auf /opt/tomcat. 
+> 7. -s /bin/false: Setzt Login-Shell. Verhindert die Anmeldung des Benutzers. 
+> 8. tomcat: Name des Benutzers.
+
+--
+
+## Installations-Paket laden
+Voraussetzung ist ein installiertes JDK. Tomcat kann direkt von der Apache-Website heruntergeladen und ausgepackt werden.
+
+```bash
 
   curl -O https://downloads.apache.org/tomcat/tomcat-9/v9.0.96/bin/apache-tomcat-9.0.96.tar.gz
-
+  
   sudo tar xf apache-tomcat-9.0.96.tar.gz  -C /opt/tomcat/
 
-  sudo ln -s /opt/tomcat/apache-tomcat-9.0.96 /opt/tomcat/tomcat9
+  sudo ln -s /opt/tomcat/apache-tomcat-9.0.96 /opt/tomcat/current
 
-  sudo chown -R tomcat: /opt/tomcat/*
-  sudo sh -c 'chmod +x /opt/tomcat/tomcat9/bin/*.sh'
+  sudo chown -R tomcat: /opt/tomcat
+  sudo sh -c 'chmod +x /opt/tomcat/current/bin/*.sh'
+  
+ ```
 
-  sudo vi /etc/systemd/system/tomcat.service
+> 1. Auspacken in das zuvor angelegte Home-Verzeichnis
+> 2. Einen Link auf das aktuelle Verzeichnis erstellen
+> 3. Berechtigungen setzen
+> 4. Ausführungsrechte setzen
 
+--
+
+## Environment konfigurieren
+setenv.sh erstellen und Umgebungsvariablen setzen. 
+
+```bash
+
+sudo vi /opt/tomcat/current/bin/setenv.sh
+
+chmod u+x /opt/tomcat/current/bin/setenv.sh
+
+
+```
+
+Umgebungsvariablen setzen:
+
+```bash
+#!/bin/sh
+JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+CATALINA_PID=/opt/tomcat/current/temp/tomcat.pid
+CATALINA_HOME=/opt/tomcat/current
+CATALINA_BASE=/opt/tomcat/current
+CATALINA_OPTS="-Xms512M -Xmx1024M -server -XX:+UseParallelGC"
+JAVA_OPTS=-Djava.awt.headless=true
+
+
+```
+
+1. JAVA_HOME: Pfad zur Java-Installation
+2. CATALINA_PID: Datei mit der Prozess-ID.
+3. CATALINA_HOME: Verzeichnis der Tomcat-Installation
+4. CATALINA_BASE: Verzeichnis der Konfiguration. Optional.
+5. CATALINA_OPTS: Java-Optionen für Tomcat:
+   - -Xms512M: Start-Heap-Größe
+   - -Xmx1024M: Max-Heap-Größe
+   - -server: Server-Modus
+   - -XX:+UseParallelGC: Garbage-Collector
+6. JAVA_OPTS: Java-Optionen für alle Java-Anwendungen
+   - -Djava.awt.headless=true: Headless-Modus für Java AWT
+
+
+--
+
+## Tomcat im Vordergrund starten
+Started im Vordergrund. Log wird in die Console ausgegeben.
+```bash
+
+sudo -u tomcat /opt/tomcat/current/bin/catlina.sh run
+
+
+```
+
+> Immer `sudo -u tomcat` verwenden, um den Service als Benutzer `tomcat` zu starten. Wenn der Service mit root gestartet wird, werden die temporäre Dateien mit root-Rechten erstellt und können nicht von `tomcat` gelesen oder geschrieben werden. Z.B. JSP, Logs, etc.
+
+
+--
+
+## Service konfigurieren
+Tomcat als Service mit `systemd` konfigurieren.
+
+```bash
+sudo vi /etc/systemd/system/tomcat.service
+```
+
+```plaintext
 Description=Apache Tomcat
 After=network.target
-
 [Service]
 Type=forking
-
-Environment="JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64"
-Environment="CATALINA_PID=/opt/tomcat/tomcat9/temp/tomcat.pid"
-Environment="CATALINA_HOME=/opt/tomcat/tomcat9/"
-Environment="CATALINA_BASE=/opt/tomcat/tomcat9/"
-Environment="CATALINA_OPTS=-Xms512M -Xmx1024M -server -XX:+UseParallelGC"
-Environment="JAVA_OPTS=-Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom"
-
 ExecStart=/opt/tomcat/current/bin/startup.sh
 ExecStop=/opt/tomcat/current/bin/shutdown.sh
-
 User=tomcat
 Group=tomcat
 UMask=0007
 RestartSec=10
 Restart=always
-
 [Install]
 WantedBy=multi-user.target
+```
+1. Description: Beschreibung des Services
+2. After: Startet nach dem Netzwerk
+3. Type: Forking-Modus. Bedeutet, dass der Service im Hintergrund läuft.
+4. ExecStart & ExecStop: Start- und Stop-Skript
+6. User & Group: User und Gruppe, unter der der Service läuft
+8. UMask: Berechtigungen, die entzogen werden:
+   - 0 für den Benutzer und Gruppe: keine Rechte entziehen
+   - 7 für alle anderen: entzogen werden Lesen (4), Schreiben (2) und Ausführen (1))
+9. RestartSec und Restart: Immer Neustartetn nach Absturz und Wartezeit
+10. WantedBy: Nicht-grafische Benutzersitzungen werden akzeptiert.
+```
 
-# 
+--
 
+## Service starten
 
-# 
+```bash
+
+sudo systemctl daemon-reload
+
+sudo systemctl start tomcat
+
+sudo tail -f /opt/tomcat/current/logs/catalina.out
+
+sudo systemctl stop tomcat
+
+sudo systemctl restart tomcat
+
+```
