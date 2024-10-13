@@ -319,3 +319,35 @@ sudo systemctl stop tomcat
 sudo systemctl restart tomcat
 
 ```
+
+
+--
+
+## Tomcat Home
+
+Tomcat Startseite ist unter http://localhost:8080 zu erreichen.
+![tomcat-home.png](img%2Ftomcat-home.png)
+
+
+--
+
+## Manager - Status Seite
+
+Tomcat Status-Seite ist unter http://localhost:8080/manager/status zu erreichen.
+![tomcat-home.png](img%2Ftomcat-home.png)
+
+
+--
+
+## Manager - List Applications
+
+Die Manager-Applikation ist unter http://localhost:8080/manager/html zu erreichen.
+![tomcat-manager.png](img%2Ftomcat-manager.png)
+
+
+--
+
+## Tomcat Examples
+
+Die Beispiele sind unter http://localhost:8080/examples zu erreichen (falls installiert). 
+![tomcat-examples-servlets.png](img%2Ftomcat-examples-servlets.png)

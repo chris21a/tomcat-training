@@ -79,7 +79,7 @@ Restart=always
 WantedBy=multi-user.target
 ```
 
-2. Laden Sie die Service-Datei neu damit die Konfiguration übernommen wird:
+2. Laden Sie die Service-Datei neu, damit die Konfiguration übernommen wird:
 ```bash
 sudo systemctl daemon-reload
 ```
@@ -94,7 +94,27 @@ sudo systemctl start tomcat
 sudo tail -f /opt/tomcat/current/logs/catalina.out
 ```
 
-5. Stoppen Sie den Tomcat Service:
+5. Startseite im Browser öffnen
+- Der Server ist auf dem Linux-Gast-System unter Port 8080 erreichbar.
+- Auf dem Windows-Host existiert ein Port-Mapping auf Port 8888.
+  - Öffnen sie auf dem Windows-Host den Browser mit http://localost:8888. Sie sehen die Startseite des Tomcat Servers.
+  - Öffnen sie den Dokumentations-Bereich. Es sollte ein Berechtigungsfehler kommen, da nur localhost die Dokumentation sehen darf: http://localost:8888/docs
+- Starten sie auf dem Windows-Gast ein Port-Forwarding damit der Browser als localhost erkannt wird:
+
+```bash
+ssh -L 8008:localhost:8080 -p 2222 training@localhost
+```
+- Das Port-Forwarding mappt den Port 8008 vom Host-System auf 8080 auf dem Gast-System.
+- Öffnen sie jetzt die URL mit anderer Port-Nummer: http://localost:8008/docs. Sie sehen jetzt den Dokumentations-Bereich.
+
+
+6. Stoppen Sie den Tomcat Service:
 ```bash
 sudo systemctl stop tomcat
 ```
+
+7. Starten Sie den Tomcat Service erneute für die späteren Übungen:
+```bash
+sudo systemctl start tomcat
+```
+
