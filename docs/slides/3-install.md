@@ -1,4 +1,4 @@
-# Installation
+# Tomcat - Installation
 
 --
 
@@ -351,3 +351,15 @@ Die Manager-Applikation ist unter http://localhost:8080/manager/html zu erreiche
 
 Die Beispiele sind unter http://localhost:8080/examples zu erreichen (falls installiert). 
 ![tomcat-examples-servlets.png](img%2Ftomcat-examples-servlets.png)
+
+
+--
+
+## Alternative Wege zur Installation
+
+- Ansible Playbook
+- Chef Cookbook
+- Docker / Docker Compose
+- Kubernetes Helm Chart
+- Kubernetes Operator
+- Cloud-Service (AWS Bean Stalk, Azure App Service, Google App Engine)

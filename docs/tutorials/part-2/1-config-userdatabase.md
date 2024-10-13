@@ -27,9 +27,14 @@
 
 # Schritt 2: Neustart des Servers
 - Änderungen an der tomcat-users.xml werden nicht zur Laufzeit neu geladen
-- Starte den Serer neu, um die Änderungen zu übernehmen. Siehe "[Installation](..%2F..%2Fslides%2F3-install.md): Service starten".
+- Starte den Serer neu, um die Änderungen zu übernehmen. Siehe "[Installation](../../slides/3-install.md): Service starten".
 
 # Schritt 3: Testen der Konfiguration
 - Überprüfe ob der neue User funktiert
 - Öffne die Manager Webapp unter http://localhost:8080/manager/html und benutzt den neuen User.
 - Falls es nicht funktioniert ünerprüfe das Logfile unter `/opt/tomcat/current/logs/catalina.out`
+
+# Schritt 4: Test die Example App
+- Öffne die URL http://localhost:8080/examples/jsp/security/protected/index.jsp
+- Logge dich mit Kombinationen der User `both` und `training` ein
+- Der User `training` sollte keinen Zugriff haben

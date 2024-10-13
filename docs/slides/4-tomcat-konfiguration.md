@@ -1,19 +1,22 @@
 # Konfiguration
 
----
+--
 
 ## Konfigurations-Orte
 
-| Datei                                 | Beschreibung                                                             |
-|---------------------------------------|--------------------------------------------------------------------------|
-| conf/server.xml                       | Hauptkonfigurationsdatei                                                 |
-| conf/tomcat-users.xml                 | Benutzer- und Rollenkonfiguration                                        |
-| conf/web.xml                          | Standard-Webanwendungskonfiguration, die für alle Webanwendungen gelten. |
-| conf/catalina.properties              | Systemeinstellungen und Pfade                                            |
-| conf/logging.properties               | Zentrale Log Konfiguration                                               |
-| webapps/\<NAME\>/META-INF/context.xml | Kontextkonfiguration der Anwendung                                       |
-| webapps/\<NAME\>/WEB-INF/web.xml      | Konfiguration der Anwendung                                              |
+| Datei                                 | Beschreibung                                                                                           |
+|---------------------------------------|--------------------------------------------------------------------------------------------------------|
+| conf/server.xml                       | Hauptkonfigurationsdatei                                                                               |
+| conf/tomcat-users.xml                 | Benutzer- und Rollenkonfiguration                                                                      |
+| conf/web.xml                          | Standard-Webanwendungskonfiguration, die für alle Webanwendungen gelten (Default Servlet, MIME-Types). |
+| conf/catalina.properties              | Systemeinstellungen und Pfade                                                                          |
+| conf/logging.properties               | Zentrale Log Konfiguration                                                                             |
+| webapps/\<NAME\>/<br/>META-INF/context.xml | Kontextkonfiguration der Anwendung                                                                     |
+|                                       |                                                                                                        |
+| webapps/\<NAME\>/<br/>WEB-INF/web.xml      | Konfiguration der Anwendung                                                                            |
 
+Note:
+Default Servlet für alle Webanwendungen, Static Files, JSP-Servlet, MIME-Types, Welcome File, etc. werden in der conf/web.xml definiert.
 
 --
 
@@ -21,7 +24,7 @@
 
 
 ```xml
-<Server port="8005" shutdown="SHUTDOWN" address="localhost">
+<Server port="8005" shutdown="SHUTDOWN">
   <Listener className="..." />
   <Listener className="..." />
 
@@ -32,6 +35,8 @@
 </Server>
 ```
 - **Port:** Nummer des Port für den Shutdown-Befehl, -1 = deaktiviert (erfordert JSVC oder Win Service)
+- **Address:** Optional - Interface auf dem der Shutdown-Befehl empfangen wird
+- **Shutdown:** Befehl zum Herunterfahren des Servers
 - **Listener:** reagieren auf Ereignisse des Servers 
 - **GlobalNamingResources:** Globale JNDI-Ressourcen
 - **Service:** Jede Service-Instanz kann mehrere Connectors und Engines enthalten.
@@ -56,9 +61,9 @@ Shutdown Port kann aus Sicherheitsgründen deaktiviert werden. Das Catalina Stop
     <Resource name="..." .../>
   </GlobalNamingResources>
 ```
-- Üblicherweise wird als zentrale Ressource die UserDatabase definiert.
-- User werden über die Datei tomcat-users.xml definiert.
-- Wird benötigt für die Manager App
+- Standardmässig wird hier die UserDatabase definiert.
+- User werden über die Datei tomcat-users.xml definiert. Wird benötigt für die Manager App
+- Weitere globale JNDI-Ressourcen werden hier konfiguriert bei Bedarf. Alternativ in der context.xml je Webapp.
 
 Note:
 JNDI-Ressourcen, sind Beans, die vom Server verwaltet werden und von Anwendungen genutzt werden können. Beispiele sind Datenbankverbindungen, Mail-Sessions, oder andere zentrale Objecte, etc. Eine ähnliche Aufgabe erfüllen Spring Beans.
@@ -89,7 +94,7 @@ JNDI-Ressourcen, sind Beans, die vom Server verwaltet werden und von Anwendungen
   - manager-jmx    - manager-jmx - ermöglicht den Zugriff auf den JMX-Proxy und die Statusseiten
   - manager-status - ermöglicht nur den Zugriff auf die Statusseiten
 
-- Benutzer und Rollen können auch für andere Anwendungen definiert werden.
+- Benutzer und Rollen können auch von anderen Anwendungen definiert werden.
 - Weitere UserDatabases können per JDBC oder LDAP definiert werden.
 
 
@@ -128,7 +133,7 @@ JNDI-Ressourcen, sind Beans, die vom Server verwaltet werden und von Anwendungen
   </Engine>
 </Service>
 ```
-- Ein Service besteht aus einer Kombination von Konnektoren und einer Engine
+- Ein Service besteht aus einer Kombination von Konnektoren und einer Engine.
 - Der Default-Service ist "Catalina".
 - Es sind mehre Services pro Server möglich, aber eher unüblich.
 
@@ -136,9 +141,58 @@ Note:
 Mehrere Services sind möglich und erlauben eine multi-mandaten-föhigkeit. Ein Service kann z.B. für die Entwicklung und ein anderer für die Produktion genutzt werden.
 Allerdings würde ich von diesem Pattern abraten und stattdessen mehre Tomcat-Instanzen verwenden.
 Die Vorteile sind bessere Isoliation, bessere Skalierbarkeit und bessere Wartbarkeit. Der Overhead für weitere Instanzen kann bei den heute üblicherweise verfügbaren Ressourcen vernachlässigt werden.
----
 
-## Engine
+
+--
+
+## server.xml: Connectoren
+
+```xml
+<Service name="Catalina">
+    <Connector port="..." protocol="..." ... />
+    <Connector port="..." protocol="..." ... />
+    ...
+</Service>
+```
+Connectoren sind für die Kommunikation mit Clients verantwortlich:
+
+| **Connector**        | **Protocol**                         | **Verwendung**                                                              |
+|----------------|--------------------------------------------|-----------------------------------------------------------------------------|
+| HTTP/1.1 NIO   | org.apache.coyote.http11.Http11NioProtocol | (Non-blocking I/O) Bessere Skalierbarkeit, Non-blocking I/O                 |
+| HTTP/1.1 NIO2  | org.apache.coyote.http11.Http11Nio2Protocol| Verbesserte Version von NIO, unterstützt HTTP/2                             |
+| HTTP/1.1 APR   | org.apache.coyote.http11.Http11AprProtocol | Nutzt native Bibliotheken für bessere Performance und SSL-Unterstützung     |
+| AJP            | AJP/1.3                                    | Verbindet Tomcat mit Webservern wie Apache HTTP Server oder IIS             |
+| HTTP/2         | org.apache.coyote.http2.Http2Protocol      | Kein eigener Connector, verwendet Upgrade-Direktive                         |
+
+
+--
+
+
+--
+
+## Connector: HTTP/1.1
+
+```xml
+    <Connector port="8080" protocol="HTTP/1.1"
+               connectionTimeout="20000"
+               redirectPort="8443"
+               maxParameterCount="1000"
+               />
+```
+- Connectoren sind für die Kommunikation mit Clients verantwortlich und implementieren Protokolle wie HTTP, AJP oder HTTP/2.
+- Kann sowohl HTTP als auch HTTPS Verbindungen unterstützen.
+
+
+--
+
+> **Note für den Sprecher:**
+> Erläutern Sie den Unterschied zwischen HTTP und HTTPS Connectors. Führen Sie das Thema SSL/TLS ein und erklären Sie,
+> wie man den HTTPS Connector mit einem SSL-Zertifikat konfiguriert.
+
+
+--
+
+## server.xml: Engine
 
 - Verarbeitet eingehende HTTP-Anfragen.
 - Verknüpft mit Hosts für die Ausführung von Webanwendungen.
@@ -181,45 +235,13 @@ Erweitertes Beispiel:
 </Host>
 ```
 
----
 
-> **Note für den Sprecher:**
+> Note:
 > Diskutieren Sie, wie das `appBase` Verzeichnis bestimmt, wo Tomcat nach Webanwendungen sucht. Erklären Sie, wie der
 > Parameter `reloadable="true"` zur Entwicklung nützlich ist, um Anwendungen neu zu laden, ohne Tomcat neu starten zu
 > müssen.
 
----
-
-## Connector
-
-- Verbindet Clients mit Tomcat und definiert Ports und Protokolle.
-- Kann sowohl HTTP als auch HTTPS Verbindungen unterstützen.
-
-Erweitertes Beispiel:
-
-```xml
-<Connector port="8080" protocol="HTTP/1.1"
-           connectionTimeout="20000"
-           redirectPort="8443"
-           compression="on"
-           compressionMinSize="2048"
-           noCompressionUserAgents="gozilla, traviata"
-           compressableMimeType="text/html,text/xml,text/plain"/>
-           
-<!-- HTTPS Connector -->
-<Connector port="8443" protocol="org.apache.coyote.http11.Http11NioProtocol"
-           maxThreads="150" SSLEnabled="true" scheme="https" secure="true"
-           keystoreFile="/path/to/keystore" keystorePass="changeit"
-           clientAuth="false" sslProtocol="TLS"/>
-```
-
----
-
-> **Note für den Sprecher:**
-> Erläutern Sie den Unterschied zwischen HTTP und HTTPS Connectors. Führen Sie das Thema SSL/TLS ein und erklären Sie,
-> wie man den HTTPS Connector mit einem SSL-Zertifikat konfiguriert.
-
----
+--
 
 ## Benutzerverwaltung
 
