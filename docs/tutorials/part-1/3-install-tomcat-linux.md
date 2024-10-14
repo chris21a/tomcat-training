@@ -41,13 +41,15 @@ JAVA_OPTS=-Djava.awt.headless=true
 2. Berechtigungen setzen
 
 ```bash
-chmod u+x /opt/tomcat/current/bin/setenv.sh
+sudo chmod u+x /opt/tomcat/current/bin/setenv.sh
+
+sudo chown -R tomcat: /opt/tomcat/current/bin/setenv.sh
 ```
 
 # Schritt 4: Tomcat im Vordergrund starten 
 1. Um die Installation zu überprüfen Tomcat im Vordergrund starten
 ```bash
-sudo -u tomcat /opt/tomcat/current/bin/catlina.sh run
+sudo -u tomcat /opt/tomcat/current/bin/catalina.sh run
 ```
 
 2. Zum Stopen Ctrl+C drücken
