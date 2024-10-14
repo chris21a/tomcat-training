@@ -125,9 +125,11 @@ Windows:
 
     %CATALINA_HOME%\bin\catalina.cmd stop
 
+
 --
 
 ## Catalina Kommandos
+
 Das Skript `catalina.sh` (oder `catalina.bat`) unterstützt folgende Kommandos:
 <br>
 
@@ -139,6 +141,7 @@ Das Skript `catalina.sh` (oder `catalina.bat`) unterstützt folgende Kommandos:
 | version       | Zeigt die Version. |
 | debug         | Startet im Debug-Modus im Vordergrund <br>(für Java IDE's mit JPDA Support) |
 | jpda start    | Startet Service im Debug-Modus im Hintergrund |
+
 
 --
 
@@ -363,3 +366,123 @@ Die Beispiele sind unter http://localhost:8080/examples zu erreichen (falls inst
 - Kubernetes Helm Chart
 - Kubernetes Operator
 - Cloud-Service (AWS Bean Stalk, Azure App Service, Google App Engine)
+
+
+--
+
+## Server.xml: Ports
+
+```xml
+<Server port="8005" shutdown="SHUTDOWN">
+  <Service name="Catalina">
+
+    <Connector port="8080" protocol="HTTP/1.1"
+               connectionTimeout="20000"
+               redirectPort="8443"
+               maxParameterCount="1000"
+               />
+
+```
+- Connectoren legen die Ports fest
+- Zum Ändern des Port-Mapping:
+  - Shutdown Port anpassen
+  - Connector Port anpassen
+
+--
+
+## Server.xml: Ports über Environment setzen
+
+```bash
+CATALINA_OPTS="$CATALINA_OPTS -Dorg.apache.tomcat.util.digester.PROPERTY_SOURCE=
+org.apache.tomcat.util.digester.EnvironmentPropertySource"
+
+SHUTDOWN_PORT=9105
+HTTP_PORT=9180
+
+CATALINA_OPTS="$CATALINA_OPTS -Dport.http=${HTTP_PORT} -Dport.shutdown=${SHUTDOWN_PORT}"
+```
+
+Properties in server.xml nutzen:
+
+```xml
+<Server port="${port.shutdown}" shutdown="SHUTDOWN">
+  <Service name="Catalina">
+    <Connector port="${port.http}" protocol="HTTP/1.1"
+```
+
+--
+
+## Mehrere Tomcat-Instanzen
+Mehrere Tomcat-Instanzen können auf einem Server laufen. 
+
+- CATALINA_HOME: Binaries
+- CATALINA_BASE: Konfiguration und Webapps für mehrere Instanzen
+
+```plaintext
+${CATALINA_HOME}
+│
+├── bin/
+│   └── Skripte und Bootstrap
+├── lib/
+│   └── Standard Bibliotheken
+└── endorsed/  (Standard nicht vorhanden)
+```
+<!-- .element: class="r-stretch" -->
+
+
+--
+
+## Catalina-Base    
+
+```plaintext
+${CATALINA_BASE}
+│
+├── bin/
+│   └── nur setenv.sh
+├── conf/
+│   ├── catalina.policy
+│   ├── catalina.properties
+│   ├── context.xml
+│   ├── server.xml
+│   ├── tomcat-users.xml
+│   └── web.xml
+├── lib/
+│   └── JAR-Dateien, zusätzlich
+├── logs/
+│   ├── catalina.out
+│   ├── localhost_access_log.txt
+│   └── weitere Logdateien
+├── temp/
+│   └── temporäre Dateien
+├── webapps/
+│   ├── docs/
+│   ├── examples/
+│   ├── host-manager/
+│   ├── manager/
+│   ├── ROOT/
+│   └── weitere Webanwendungen
+└── work/
+    └── kompilierte JSP-Dateien und temporäre Arbeitsdateien
+
+```
+<!-- .element: class="r-stretch" -->
+
+--
+
+## Multi Instance Setup
+
+```plaintext
+/opt/tomcat/current         CATALINA_HOME
+
+/opt/tomcat/home/tomcat1    CATALINA_BASE       Port 8180
+/opt/tomcat/home/tomcat2    CATALINA_BASE       Port 8280
+/opt/tomcat/home/tomcat2    CATALINA_BASE       Port 8380
+
+```
+<!-- .element: class="r-stretch" -->
+
+--
+
+</div>
+
+--

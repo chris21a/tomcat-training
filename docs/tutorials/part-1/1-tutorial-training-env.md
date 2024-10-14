@@ -28,6 +28,7 @@ In der VirtualBox ist ein Ubunut 24 Gast-System installiert:
 ## Erste Schritte
 1. Melden sie sich an der Trainings-Umgebung an mit ihren Zugangsdaten.
 2. Starten sie ihren virtuellen Desktop.
+3. Starten sie die VirtualBox und starten sie das Gast-System "Ubuntu".
 3. Öffnen sie VisualStudio Code
 4. Öffnen sie den Webbrowser und navigieren sie zu [http://localhost:80](http://localhost:80). Der IIS-Webserver sollte eine Standardseite anzeigen.
 5. Öffnen sie im Webbrowser [http://localhost:8000](http://localhost:8000). Der Apache-Webserver auf dem Ubuntu Gast-System sollte eine Standardseite anzeigen.
