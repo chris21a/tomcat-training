@@ -314,7 +314,7 @@ Jeder `<Context>` definiert eine Webanwendung innerhalb eines Hosts.
 
 --
 
-# Host Alias
+## Host Alias
 
 - Anstatt eines neuen virtuellen Host mit eigenen Webapps kann auch ein Alias definiert werden
 
@@ -371,20 +371,129 @@ Jeder `<Context>` definiert eine Webanwendung innerhalb eines Hosts.
 ```
 
 Note:
-Viele Einstellungen wie Servlet-Mappings werden mittlerweile eher über Annotations direkt im Quellcode verwaltet.
+Viele Einstellungen wie Servlet-Mappings werden mittlerweile häufig über Annotations direkt im Quellcode verwaltet.
+
 
 --
 
-# Struktur einer Webapp / WAR-Archiv
+## Struktur einer Webapp / WAR-Archiv
 
+- Beispiel-Struktur einer Webapp mit dem Namen `my-webapp`.
+- WAR-Datei: `my-webapp.war` (ZIP-komprimiert)
 
-- **/WEB-INF/**: Enthält web.xml, Klassen und Bibliotheken.
-- **/WEB-INF/web.xml**: Bereitstellungsdeskriptor für Servlet-Konfiguration.
-- **/WEB-INF/classes/**: Kompilierte Java-Klassen der Anwendung.
-- **/WEB-INF/lib/**: JAR-Dateien für Bibliotheken.
-- **/META-INF/content.xml**: Context Descriptor der Anwendung (Optional).
-- **/index.html**: Standard-Startseite (optional).
-- ***...***: Beliebige weitere Dateien und Unterverzeichnisse (JSP, Static Files, etc.)
+```text
+
+my-webapp/
+├── index.html
+├── anotherpage.jsp
+├── static/           # nur ein Beispiel, static Files können auch in anderen Ordnern liegen                        
+│   ├── styles.css
+│   ├── scripts.js
+│   └── logo.png
+├── WEB-INF/          # geschütztes Verzeichnis, seit Servlet 3.0 optional
+│   ├── web.xml       # web.xml mittlerweile optional, Alternative sind Annotationen im Java Code
+│   ├── classes/
+│   │   └── com/
+│   │       └── example/
+│   │           └── MyServlet.class
+│   ├── lib/
+│   │   ├── library1.jar
+│   │   └── library2.jar
+│   └── tld/
+│       └── custom-taglib.tld
+└── META-INF/         # geschütztes Verzeichnis, optional
+    └── context.xml   # Context kann auch an anderer Stelle definiert werden.
+
+```
+<!-- .element: class="r-stretch" -->
+
 
 --
 
+## ROOT-Webanwendung in Tomcat
+
+- **ROOT** ist die Standard-Webanwendung in Tomcat.
+- Sie wird geladen, wenn keine spezifische URL für eine andere Webanwendung angegeben ist.
+- Wird verwendet, um eine Webseite direkt unter der Domain zu hosten (z. B. `http://example.com`).
+- Man kann eine eigene Anwendung unter dem Namen **ROOT.war** bereitstellen.
+ 
+```text
+$CATALINA_HOME
+├── webapps/                    
+└── ROOT/           
+   ├── index.jsp
+   ├── favicon.ico
+   ├── ...
+   └── WEB-INF/   
+      └── web.xml
+```
+
+
+--
+
+## Static File Serving
+- Static File Serving wird über das DefaultServlet ermöglicht, das Standardmäßig in jeder Webapp enthalten ist:
+- Das DefaultServlet wird überlicherweise global in `CATALINA_HOME/conf/web.xml` konfiguriert.
+
+```code
+
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee" ... >
+    <servlet>
+        <servlet-name>default</servlet-name>
+        <servlet-class>org.apache.catalina.servlets.DefaultServlet</servlet-class>
+        
+        <init-param><param-name>debug</param-name><param-value>0</param-value></init-param>
+        <init-param><param-name>listings</param-name><param-value>false</param-value></init-param>
+
+```
+
+
+--
+
+# Welcome File
+
+- Legt fest welches File angezeigt wird wenn die URL "/" aufgerufen wird.
+- Default wird global in `CATALINA_HOME/conf/web.xml` konfiguriert.
+```code
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee" ..>
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>  <!-- Erste Datei, die Tomcat sucht -->
+        <welcome-file>index.htm</welcome-file>   
+        <welcome-file>index.jsp</welcome-file>
+```
+
+
+--
+
+# Mime Types
+
+- Default wird global in `CATALINA_HOME/conf/web.xml` konfiguriert.
+
+```code
+    <mime-mapping>
+        <extension>htm</extension>
+        <mime-type>text/html</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>html</extension>
+        <mime-type>text/html</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>pdf</extension>
+        <mime-type>application/pdf</mime-type>
+    </mime-mapping>
+```
+
+
+--
+
+
+# Session Timeout
+
+- Zeit bis eine inaktive Session ungültig wird.
+
+```code
+    <session-config>
+        <session-timeout>30</session-timeout> <!-- Minutes -->
+    </session-config>
+```

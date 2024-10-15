@@ -11,10 +11,9 @@ Zielbild:
 ## Schritt 1: Installation
 1. Stelle sicher das die folgenden Schritte als User `tomcat` durchgeführt werden: `sudo -u tomcat /bin/bash`
 2. Erstelle das Verzeichnisse `/opt/tomcat/tomcat2`
-2. Kopiere die Dateien von /opt/tomcat/current/* nach /opt/tomcat/tomcat2/
-3. Lösche in /opt/tomcat/tomcat2/bin alle Dateien ausser `setenv.sh`
-4. Konfiguriere die Ports auf die neuen Werte (je nachdem wie der Stand deiner Installation ist direkt in der `server.xml` oder über Umgebungsvariablen in der `setenv.sh`)
-5. Starte den Tomcat 1 im und überprüfe den Port
+3. Kopiere die Dateien von /opt/tomcat/current/* nach /opt/tomcat/tomcat2/
+4. Lösche in /opt/tomcat/tomcat2/bin alle Dateien ausser `setenv.sh`
+5. Konfiguriere die Ports auf die neuen Werte (je nachdem wie der Stand deiner Installation ist direkt in der `server.xml` oder über Umgebungsvariablen in der `setenv.sh`)
 6. Erstelle eine zweite Service Konfiguration
 
 ```bash
@@ -40,7 +39,7 @@ RestartSec=10
 Restart=always
 
 # CATALINA_BASE
-Environment="CATALINA_BASE=/opt/tomcat/current"
+Environment="CATALINA_BASE=/opt/tomcat/tomcat2"
 
 [Install]
 WantedBy=multi-user.target
