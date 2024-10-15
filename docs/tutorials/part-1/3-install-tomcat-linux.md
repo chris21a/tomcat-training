@@ -33,7 +33,6 @@ Inhalt der Datei:
 JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
 CATALINA_PID=/opt/tomcat/current/temp/tomcat.pid
 CATALINA_HOME=/opt/tomcat/current
-CATALINA_BASE=/opt/tomcat/current
 CATALINA_OPTS="-Xms512M -Xmx1024M -server -XX:+UseParallelGC"
 JAVA_OPTS=-Djava.awt.headless=true
 ```
@@ -66,6 +65,8 @@ Inhalt der Datei:
 ```plaintext
 Description=Apache Tomcat
 After=network.target
+
+Environment="CATALINA_BASE=/opt/tomcat/current"
 
 [Service]
 Type=forking

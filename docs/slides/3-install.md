@@ -358,18 +358,6 @@ Die Beispiele sind unter http://localhost:8080/examples zu erreichen (falls inst
 
 --
 
-## Alternative Wege zur Installation
-
-- Ansible Playbook
-- Chef Cookbook
-- Docker / Docker Compose
-- Kubernetes Helm Chart
-- Kubernetes Operator
-- Cloud-Service (AWS Bean Stalk, Azure App Service, Google App Engine)
-
-
---
-
 ## Server.xml: Ports
 
 ```xml
@@ -392,22 +380,24 @@ Die Beispiele sind unter http://localhost:8080/examples zu erreichen (falls inst
 
 ## Server.xml: Ports über Environment setzen
 
+- Property `CATALINA_OPTS` setzen
+- EnvironmentPropertySource kann auch alternativ in `conf/common.properties` gesetzt werden
+
 ```bash
-CATALINA_OPTS="$CATALINA_OPTS -Dorg.apache.tomcat.util.digester.PROPERTY_SOURCE=
-org.apache.tomcat.util.digester.EnvironmentPropertySource"
+CATALINA_OPTS="$CATALINA_OPTS -Dorg.apache.tomcat.util.digester.PROPERTY_SOURCE=org.apache.tomcat.util.digester.EnvironmentPropertySource"
 
-SHUTDOWN_PORT=9105
-HTTP_PORT=9180
+ENV_PORT_SHUTDOWN=9105
+ENV_PORT_HTTP=9181
 
-CATALINA_OPTS="$CATALINA_OPTS -Dport.http=${HTTP_PORT} -Dport.shutdown=${SHUTDOWN_PORT}"
+
 ```
 
-Properties in server.xml nutzen:
+Umgebungsvariablen in server.xml nutzen:
 
 ```xml
-<Server port="${port.shutdown}" shutdown="SHUTDOWN">
+<Server port="${ENV_PORT_SHUTDOWN}" shutdown="SHUTDOWN">
   <Service name="Catalina">
-    <Connector port="${port.http}" protocol="HTTP/1.1"
+    <Connector port="${ENV_PORT_HTTP}" protocol="HTTP/1.1"
 ```
 
 --

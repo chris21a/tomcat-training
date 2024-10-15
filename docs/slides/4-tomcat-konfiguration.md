@@ -4,15 +4,15 @@
 
 ## Konfigurations-Orte
 
-| Datei                                 | Beschreibung                                                                                           |
-|---------------------------------------|--------------------------------------------------------------------------------------------------------|
-| conf/server.xml                       | Hauptkonfigurationsdatei                                                                               |
-| conf/tomcat-users.xml                 | Benutzer- und Rollenkonfiguration                                                                      |
-| conf/web.xml                          | Standard-Webanwendungskonfiguration, die für alle Webanwendungen gelten (Default Servlet, MIME-Types). |
-| conf/catalina.properties              | Systemeinstellungen und Pfade                                                                          |
-| conf/logging.properties               | Zentrale Log Konfiguration                                                                             |
-| webapps/\<NAME\>/<br/>META-INF/context.xml | Kontextkonfiguration der Anwendung                                                                     |
-|                                       |                                                                                                        |
+| Datei                                      | Beschreibung                                                                                           |
+|--------------------------------------------|--------------------------------------------------------------------------------------------------------|
+| conf/server.xml                            | Hauptkonfigurationsdatei                                                                               |
+| conf/tomcat-users.xml                      | Benutzer- und Rollenkonfiguration                                                                      |
+| conf/web.xml                               | Standard-Webanwendungskonfiguration, die für alle Webanwendungen gelten (Default Servlet, MIME-Types). |
+| conf/catalina.properties                   | Systemeinstellungen und Pfade                                                                          |
+| conf/logging.properties                    | Zentrale Log Konfiguration                                                                             |
+| webapps/\<NAME\>/<br/>META-INF/context.xml | Context Decriptor der Anwendung - Variante in der Webapp                                               |
+| conf/\<ENGINE\>/\<HOST\>/\<NAME\>.xml      | Context Decriptor der Anwendung - Variante ausserhalb der Webapp                                       |
 | webapps/\<NAME\>/<br/>WEB-INF/web.xml      | Konfiguration der Anwendung                                                                            |
 
 Note:
@@ -167,192 +167,175 @@ Connectoren sind für die Kommunikation mit Clients verantwortlich:
 
 --
 
+## Allgemeine Connector Attribute 1/2
+
+| **Attribut**              | **Beschreibung**                                             | **Standardwert**    |
+|---------------------------|--------------------------------------------------------------|---------------------|
+| **ajpFlush**               | Aktiviert/deaktiviert AJP-Flush-Nachrichten.                 | true                |
+| **allowTrace**             | Aktiviert/deaktiviert die TRACE HTTP-Methode.                | false               |
+| **asyncTimeout**           | Timeout für asynchrone Anfragen (ms).                        | 10000               |
+| **enableLookups**          | DNS-Lookups für Clientnamen durchführen.                     | false               |
+| **encodedSolidusHandling** | Handhabung von `%2f` in URLs steuern.                        | reject              |
+| **maxHeaderCount**         | Maximale Anzahl von Headern pro Anfrage.                     | 100                 |
+| **maxParameterCount**      | Maximale Anzahl von GET/POST-Parametern.                     | 10000               |
+| **maxPostSize**            | Maximale Größe von POST-Anfragen (Bytes).                    | 2097152             |
+| **maxSavePostSize**        | Maximale Größe von POST-Daten bei Authentifizierung.         | 4096                |
+| **parseBodyMethods**       | HTTP-Methoden für Body-Parsing.                             | POST                |
+
+
+--
+
+## Allgemeine Connector Attribute 2/2
+
+| **Attribut**              | **Beschreibung**                                             | **Standardwert**    |
+|---------------------------|--------------------------------------------------------------|---------------------|
+| **port**                   | TCP-Port für eingehende Verbindungen.                       | 8080 oder 8009 (AJP)|
+| **protocol**               | Protokoll zur Verarbeitung des Verkehrs (AJP/HTTP).         | HTTP/1.1 oder AJP/1.3|
+| **proxyName**              | Servername in Proxy-Konfiguration.                          | leer                |
+| **proxyPort**              | Serverport in Proxy-Konfiguration.                          | 0                   |
+| **redirectPort**           | Port für automatische SSL-Weiterleitung.                    | 8443                |
+| **scheme**                 | Name des zurückgegebenen Protokolls (z. B. "https").        | http                |
+| **secure**                 | Kennzeichnet die Anfrage als sicher (true/false).           | false               |
+| **URIEncoding**            | Zeichenkodierung für URI-Dekodierung.                       | ISO-8859-1          |
+| **useBodyEncodingForURI**  | Verwendet contentType-Kodierung für URIs.                   | false               |
+| **useIPVHosts**            | Verwendet IP-Adresse für virtuelle Hosts.                   | false               |
+| **xpoweredBy**             | Aktiviert/deaktiviert den X-Powered-By-Header.              | false               |
+
 
 --
 
 ## Connector: HTTP/1.1
 
+> Dokumentation: https://tomcat.apache.org/tomcat-9.0-doc/config/http.html
+
 ```xml
-    <Connector port="8080" protocol="HTTP/1.1"
-               connectionTimeout="20000"
-               redirectPort="8443"
-               maxParameterCount="1000"
-               />
+    <Connector port="8080" protocol="HTTP/1.1" 
+      connectionTimeout="20000" redirectPort="8443" maxParameterCount="1000"/>
+
 ```
-- Connectoren sind für die Kommunikation mit Clients verantwortlich und implementieren Protokolle wie HTTP, AJP oder HTTP/2.
-- Kann sowohl HTTP als auch HTTPS Verbindungen unterstützen.
+
+| **Parameter**        | **Beschreibung**                                                   | **Standardwert** |
+|----------------------|--------------------------------------------------------------------|------------------|
+| `port`               | Der Port, auf dem der Connector lauscht                            | 8080             |
+| `protocol`           | HTTP/1.1 wählt Variante von Nio, Nio2 oder Apr                     | "HTTP/1.1"       |
+| `connectionTimeout`  | Millisek. bevor inaktive Verbindung abbricht.                      | 60000 ms         |
+| `redirectPort`       | Port, auf den Anfragen umgeleitet werden bei HTTPS                 | 8005              |
+| `maxThreads`         | Maximale Größe des Thread Pool.                                    | 200              |
+| `minSpareThreads`    | Anzahl Threads im Leerlauf                                         | 10               |
+| `acceptCount`        | Maximale Anzahl Verbindungen in Warteschlange.                     | 100              |
+| `keepAliveTimeout`   | Millisek. bevor Keep-Alive-Verbindung abbricht                     | 20000 ms         |
+| `compression`        | Komprimierung von Inhalten. `on`, `off` oder `force`               | `off`            |
+| `maxHttpHeaderSize`  | Maximale Größe HTTP-Header                                         | 8192 Bytes       |
 
 
 --
 
-> **Note für den Sprecher:**
-> Erläutern Sie den Unterschied zwischen HTTP und HTTPS Connectors. Führen Sie das Thema SSL/TLS ein und erklären Sie,
-> wie man den HTTPS Connector mit einem SSL-Zertifikat konfiguriert.
 
+## Connector: AJP/1.3
+
+Connector für Anbindung Apache Webserver oder MS ISS: https://tomcat.apache.org/tomcat-9.0-doc/config/ajp.html
+
+```xml
+   <Connector protocol="AJP/1.3" address="::1" port="8009"
+               redirectPort="8443" maxParameterCount="1000" />
+```
+
+| **Parameter**        | **Beschreibung**                                                   | **Standardwert**  |
+|----------------------|--------------------------------------------------------------------|-------------------|
+| `port`               | Der Port, auf dem der AJP Connector lauscht                        | 8009              |
+| `protocol`           | Das verwendete Protokoll (AJP/1.3)                                 | "AJP/1.3"         |
+| `redirectPort`       | Port, auf den Anfragen umgeleitet werden bei HTTPS                 | Kein Standardwert |
+| `secretRequired`     | Erfordert ein geheimes Passwort für den AJP-Verbindungssicherheit  | `true`            |
+| `maxThreads`         | Maximale Anzahl von Threads, die Anfragen gleichzeitig verarbeiten | 200               |
+| `minSpareThreads`    | Mindestanzahl von Threads, die im Leerlauf vorgehalten werden      | 10                |
+| `acceptCount`        | Maximale Anzahl von Verbindungen in der Warteschlange              | 100               |
+| `connectionTimeout`  | Zeit (in Millisekunden), nach der inaktive Verbindungen getrennt werden | Kein Standardwert  |
+| `keepAliveTimeout`   | Millisekunden, bevor eine Keep-Alive-Verbindung getrennt wird      | -1 (keine Begrenzung) |
+| `address`      | Bind Adresse bei mereren Interfaces                        | localhost        |
+
+
+--
+
+## Connector: HTTP/2
+> Dokumentation: https://tomcat.apache.org/tomcat-9.0-doc/config/http2.html
+
+````xml
+
+<UpgradeProtocol className="org.apache.coyote.http2.Http2Protocol" />
+
+````
 
 --
 
 ## server.xml: Engine
-
-- Verarbeitet eingehende HTTP-Anfragen.
-- Verknüpft mit Hosts für die Ausführung von Webanwendungen.
-
-Beispiel:
+- Die „Engine“ stellt die gesamte Maschinerie zur Verarbeitung von Anfragen dar, die mit einem Catalina-Service verbunden ist. 
+- Empfängt und verarbeitet alle Anfragen von den Konnektoren und sendet die fertige Antwort an den Konnektor zurück.
+> Documentation: https://tomcat.apache.org/tomcat-9.0-doc/config/engine.html
 
 ```xml
+
 <Engine name="Catalina" defaultHost="localhost">
-  <!-- Host Definition -->
-  <Host name="localhost" appBase="webapps" unpackWARs="true" autoDeploy="true">
-    <Context path="" docBase="ROOT" reloadable="true"/>
-    <Context path="/app1" docBase="app1" reloadable="true"/>
-  </Host>
+  <Cluster .../>
+  
+  <Realm .../>
+  
+  <Host name="localhost" appBase="webapps" unpackWARs="true" autoDeploy="true"> ... </Host>
+  <Host name="www.acme.com" appBase="webapps-acme" unpackWARs="true" autoDeploy="true"> ... </Host>
 </Engine>
+
 ```
+- jvmRoute: Set Route to a unique value for sticky sessions
 
----
 
-> **Note für den Sprecher:**
-> Weisen Sie darauf hin, dass eine Engine für mehrere Hosts verantwortlich ist, was das Hosten mehrerer Domänen
-> ermöglicht. Erklären Sie, dass jeder `<Context>` eine Webanwendung innerhalb eines Hosts definiert.
+Note:
+Engine ist für mehrere Hosts verantwortlich ist, was das Hosten mehrerer Domänen ermöglicht. 
+Jeder `<Context>` definiert eine Webanwendung innerhalb eines Hosts.
 
----
+
+--
 
 ## Host
 
 - Definiert virtuelle Hosts (Domains) und die Webanwendungen, die darauf laufen.
-- Mehrere Hosts ermöglichen Multi-Domain-Hosting.
-
-Erweitertes Beispiel:
+- Alternativ Host Name Alias
+> Dokumentation: https://tomcat.apache.org/tomcat-9.0-doc/config/host.html
 
 ```xml
-<Host name="example.com" appBase="webapps"
-      unpackWARs="true" autoDeploy="true" xmlValidation="false">
+<Host name="localhost" appBase="webapps"
+      unpackWARs="true" autoDeploy="true" createDirs="true">
       
-  <!-- Webapps -->
-  <Context path="/" docBase="ROOT" reloadable="true" crossContext="true"/>
-  <Context path="/api" docBase="api" reloadable="true"/>
-  
+      <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs" ... />            
+      
+      <!-- nicht mehr üblich: 
+      <Context path="" docBase="ROOT" reloadable="true" crossContext="true"/> 
+      -->
+</Host>
+```
+
+--
+
+# Host Alias
+
+- Anstatt eines neuen virtuellen Host mit eigenen Webapps kann auch ein Alias definiert werden
+
+```xml
+<Host name="localhost" appBase="webapps"
+      unpackWARs="true" autoDeploy="true" createDirs="true">
+      
+      <Alias>www.acme.de</Alias>
+      <Alias>www.acme.at</Alias>
+      <Alias>www.acme.pl</Alias>
 </Host>
 ```
 
 
-> Note:
-> Diskutieren Sie, wie das `appBase` Verzeichnis bestimmt, wo Tomcat nach Webanwendungen sucht. Erklären Sie, wie der
-> Parameter `reloadable="true"` zur Entwicklung nützlich ist, um Anwendungen neu zu laden, ohne Tomcat neu starten zu
-> müssen.
-
 --
-
-## Benutzerverwaltung
-
-### Realms
-
-- Authentifizierung und Autorisierung der Benutzer wird über Realms gesteuert.
-- Der Realm kann Benutzerinformationen aus unterschiedlichen Quellen laden, z.B. aus einer Datenbank oder einem
-  LDAP-Verzeichnis.
-
-Erweitertes Beispiel für JDBCRealm:
-
-```xml
-<Realm className="org.apache.catalina.realm.JDBCRealm"
-       driverName="com.mysql.cj.jdbc.Driver"
-       connectionURL="jdbc:mysql://localhost:3306/tomcat_users"
-       connectionName="root" connectionPassword="password"
-       userTable="users" userNameCol="username" userCredCol="password"
-       userRoleTable="user_roles" roleNameCol="rolename"/>
-```
-
----
-
-> **Note für den Sprecher:**
-> Erläutern Sie den Vorteil von Realms und gehen Sie auf unterschiedliche Arten ein (MemoryRealm, JDBCRealm, JNDIRealm).
-> Erklären Sie, dass Realms in Unternehmensumgebungen oft an LDAP oder Datenbanken angebunden werden.
-
----
-
-### Rollen und Benutzer
-
-- Benutzer werden in der Datei `tomcat-users.xml` definiert.
-- Rollen ermöglichen eine feingranulare Steuerung des Zugriffs.
-
-Erweitertes Beispiel:
-
-```xml
-<role rolename="manager-gui"/>
-<role rolename="admin-gui"/>
-<user username="admin" password="secret" roles="manager-gui,admin-gui"/>
-<user username="developer" password="devpass" roles="manager-script"/>
-```
-
----
-
-> **Note für den Sprecher:**
-> Weisen Sie darauf hin, dass der Zugriff auf sensible Bereiche wie das Tomcat-Manager-Interface durch Rollen gesteuert
-> wird. Veranschaulichen Sie die Wichtigkeit sicherer Passwörter.
-
----
-
-## Sessions
-
-- Sitzungen speichern den Zustand von Benutzern zwischen Anfragen.
-- Die Konfiguration erfolgt meist in `context.xml`.
-
-Erweitertes Beispiel:
-
-```xml
-<Context>
-  <Manager className="org.apache.catalina.session.PersistentManager"
-           saveOnRestart="true"
-           maxActiveSessions="100">
-           
-    <Store className="org.apache.catalina.session.FileStore"
-           directory="session_storage"/>
-  </Manager>
-</Context>
-```
-
----
-
-> **Note für den Sprecher:**
-> Erläutern Sie, wie Tomcat Sitzungen verwaltet und warum eine persistente Speicherung sinnvoll sein kann. Führen Sie
-> die Konfiguration von Session-Managern und Speichern ein.
-
----
-
-## Server.xml
-
-- Die Hauptkonfigurationsdatei von Tomcat.
-- Enthält Definitionen für Services, Hosts und Connectors.
-
-Erweitertes Beispiel:
-
-```xml
-<Server port="8005" shutdown="SHUTDOWN">
-  <Service name="Catalina">
-    <Connector port="8080" protocol="HTTP/1.1" connectionTimeout="20000" redirectPort="8443"/>
-    <Engine name="Catalina" defaultHost="localhost">
-      <Host name="localhost" appBase="webapps" unpackWARs="true" autoDeploy="true">
-        <Context path="" docBase="ROOT"/>
-      </Host>
-    </Engine>
-  </Service>
-</Server>
-```
-
----
-
-> **Note für den Sprecher:**
-> Betonen Sie, dass `server.xml` die übergeordnete Konfigurationsdatei ist und bei Änderungen an dieser Datei Tomcat neu
-> gestartet werden muss. Erklären Sie die Struktur dieser Datei und ihre Bedeutung.
-
----
 
 ## Context.xml
 
 - Definiert Kontexteinstellungen für einzelne Webanwendungen.
 - Wird typischerweise genutzt, um Datenquellen und Umgebungsvariablen zu definieren.
-
-Erweitertes Beispiel:
+> Dokumentation: https://tomcat.apache.org/tomcat-9.0-doc/config/context.html
 
 ```xml
 <Context path="/myapp" docBase="myapp" reloadable="true">
@@ -363,20 +346,15 @@ Erweitertes Beispiel:
 </Context>
 ```
 
----
 
-> **Note für den Sprecher:**
-> Weisen Sie auf die Flexibilität der `context.xml` hin, da jede Webanwendung ihre eigene Konfiguration haben kann.
-> Erklären Sie, wie diese Datei das Laden von Datenquellen ermöglicht.
-
----
+--
 
 ## Web.xml
 
 - Definiert die Standard-Servlet-Konfiguration für alle Anwendungen.
 - Jede Webanwendung kann eine eigene `web.xml` haben.
 
-Erweitertes Beispiel:
+> Basic Example: https://tomcat.apache.org/tomcat-9.0-doc/appdev/web.xml.txt
 
 ```xml
 <web-app>
@@ -392,10 +370,21 @@ Erweitertes Beispiel:
 </web-app>
 ```
 
----
+Note:
+Viele Einstellungen wie Servlet-Mappings werden mittlerweile eher über Annotations direkt im Quellcode verwaltet.
 
-> **Note für den Sprecher:**
-> Erklären Sie, wie `web.xml` als Deployment-Deskriptor fungiert. Führen Sie aus, wie Servlet-Mappings konfiguriert
-> werden und warum dies wichtig ist, um bestimmte URLs auf Servlets zu mappen.
+--
 
----
+# Struktur einer Webapp / WAR-Archiv
+
+
+- **/WEB-INF/**: Enthält web.xml, Klassen und Bibliotheken.
+- **/WEB-INF/web.xml**: Bereitstellungsdeskriptor für Servlet-Konfiguration.
+- **/WEB-INF/classes/**: Kompilierte Java-Klassen der Anwendung.
+- **/WEB-INF/lib/**: JAR-Dateien für Bibliotheken.
+- **/META-INF/content.xml**: Context Descriptor der Anwendung (Optional).
+- **/index.html**: Standard-Startseite (optional).
+- ***...***: Beliebige weitere Dateien und Unterverzeichnisse (JSP, Static Files, etc.)
+
+--
+
