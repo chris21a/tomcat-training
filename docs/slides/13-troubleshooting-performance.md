@@ -15,6 +15,7 @@
     - Steuert den maximalen und initialen Heap-Speicher
     - Beispiel: `java -Xms512m -Xmx2g MyApp`
 
+
 --
 
 ## Performance-Analyse: CPU und Stacktraces
@@ -26,6 +27,7 @@
 - **Stacktraces erhalten**: `jstack`
     - Erstellt einen Thread-Dump der JVM
     - Beispiel: `jstack <PID> > stacktrace.txt`
+
 
 --
 
@@ -39,6 +41,7 @@
     - Beispiel: `jmap -heap <PID>`
 
 - **GC-Probleme analysieren**: Heapdump-Dateien in Tools wie Eclipse MAT analysieren
+
 
 --
 
@@ -74,7 +77,8 @@
 - **Thread-Pool-Auslastung**: currentThreadsBusy, maxThreads.
 - **JVM-Speichernutzung**: Überwachen des Heap-Speichers: committed, used, init, max.
 
----
+
+--
 
 <!-- Slide 5 -->
 # Tomcat-Überwachungstools
@@ -83,4 +87,4 @@
 - **JConsole**: Desktop-Tools, im JDK enthalten
 - **JMX Prometheus Exporter**: Generischer Exproter für MBeans: Prometheus JMX Exporter https://github.com/prometheus/jmx_exporter
 - **Tomcat Prometheus-Exporter**: Einige "inoffizielle" Projekte, z.B https://github.com/nlighten/tomcat_exporter
-- **JavaMelody**: Open-Source-Tool zur Überwachung von Metriken wie Speicher, Anforderungsdurchsatz, _JDBC-Verbindungen._
+- **JavaMelody**: Open-Source-Tool zur Überwachung von Metriken wie Speicher, Anforderungsdurchsatz, _JDBC-Verbindungen
