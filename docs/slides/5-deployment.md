@@ -97,7 +97,7 @@ Manager App ist eine Webanwendung, die mit Tomcat ausgeliefert wird.
 - Dynamisches Deployment ist ein Sicherheitsrisiko:
   - Erlaubt Angreifern, die Kontrolle über das Filesystem erlangen, das Ändern, Neustarten oder Deployment von Webanwendungen.
   - Erschwert die Kontrolle darüber, welche Version einer Anwendung tatsächlich installiert ist.
-  - Deployment beim Starten oder wöhrend des Betriebs beinflusst die Startzeit bzw. Performance.
+  - Deployment beim Starten oder während des Betriebs beinflusst die Startzeit bzw. Performance.
   - Macht im Kontext von "Docker" keinen Sinn.
 - Empfehlung:
   - Verwende nur statisches Deployment: `autoDeploy=false`, `deployOnStartup=false`

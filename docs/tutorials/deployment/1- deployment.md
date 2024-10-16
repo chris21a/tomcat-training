@@ -105,7 +105,7 @@ Die Versionsnummern sind "Text-Strings" und alphabetisch aufsteigend sortiert.
 
 ```bash
 curl --user robot:robot \                                                            
-     --upload-file C:\Users\student\Desktop\bella-versiontest.war" \
+     --upload-file "bella-versiontest.war" \
      "http://localhost:8080/manager/text/deploy?path=/bella&update=true&version=2"
 ```
 

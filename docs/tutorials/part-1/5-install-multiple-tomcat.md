@@ -18,7 +18,7 @@ Zielbild:
 
 ```bash
 
-sudo cp /etc/systemd/system/tomcat.service /etc/systemd/tomcat2.service
+sudo cp /etc/systemd/system/tomcat.service /etc/systemd/system/tomcat2.service
 
 ```
 
@@ -60,5 +60,5 @@ sudo systemctl start tomcat2
 sudo tail -f /opt/tomcat/tomcat2/logs/catalina.out
 ```
 
-11. Überprüfe den TOmcat 2 im Webbrowser auf dem neuen Port 9080
+11. Überprüfe den Tomcat 2 im Webbrowser auf dem neuen Port 9080
 Falls erforderlich stelle ein weitere Port-Forwarding her: `ssh -L 9080:localhost:9080 -p 2222 training@localhost`
